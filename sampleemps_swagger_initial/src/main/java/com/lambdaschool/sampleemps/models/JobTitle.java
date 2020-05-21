@@ -2,19 +2,13 @@ package com.lambdaschool.sampleemps.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "jobtitles")
-public class JobTitle
+public class JobTitle extends Auditable
 {
     @Id // The primary key
     @GeneratedValue(strategy = GenerationType.AUTO) // We will let the database decide how to generate it
@@ -24,10 +18,25 @@ public class JobTitle
         unique = true)
     private String title;
 
-    @ManyToMany(mappedBy = "jobtitles")
-    @JsonIgnoreProperties(value = "jobtitles",
+    /*
+     * jobname is the field from EmployeeTitles
+     * CascadeType.ALL says that when we add, update, delete an Job Title record, have that affect jobname in EmployeeTitle.
+     * Notice that in EmployeeTitle there is no cascade option. This way manipulating an JobTitle record only affects
+     * the EmployeeTitle join table but does not affect the Employee table.
+     */
+    @OneToMany(mappedBy = "jobname",
+        cascade = CascadeType.ALL)
+    /*
+     * When displaying EmployeeTitles from the JobTitle class, do not display the Job Title again.
+     * However do allow for data to be added to the jobname field in EmployeeTitles
+     */
+    @JsonIgnoreProperties(value = "jobname",
         allowSetters = true)
-    private List<Employee> employees = new ArrayList<>();
+    /*
+     * We know all of this works with EmployeeTitles because that is the class of the field name that making the One To Many relationship!
+     * This array contains the list of EmployeeTitles assigned to this Job Title
+     */
+    private List<EmployeeTitles> empnames = new ArrayList<>();
 
     public JobTitle()
     {
@@ -54,13 +63,13 @@ public class JobTitle
         this.title = title;
     }
 
-    public List<Employee> getEmployees()
+    public List<EmployeeTitles> getEmpnames()
     {
-        return employees;
+        return empnames;
     }
 
-    public void setEmployees(List<Employee> employees)
+    public void setEmpnames(List<EmployeeTitles> empnames)
     {
-        this.employees = employees;
+        this.empnames = empnames;
     }
 }

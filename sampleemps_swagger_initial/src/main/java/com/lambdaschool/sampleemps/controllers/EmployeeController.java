@@ -2,19 +2,12 @@ package com.lambdaschool.sampleemps.controllers;
 
 import com.lambdaschool.sampleemps.models.Employee;
 import com.lambdaschool.sampleemps.services.EmployeeService;
+import com.lambdaschool.sampleemps.views.EmpNameCountJobs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -38,8 +31,8 @@ public class EmployeeController
 
     @GetMapping(value = "/employee/{employeeid}")
     public ResponseEntity<?> getEmployeeById(
-        @PathVariable
-            long employeeid)
+            @PathVariable
+                    long employeeid)
     {
         Employee e = employeeService.findEmployeeById(employeeid);
         return new ResponseEntity<>(e, HttpStatus.OK);
@@ -123,6 +116,42 @@ public class EmployeeController
             long employeeid)
     {
         employeeService.delete(employeeid);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/job/counts")
+    public ResponseEntity<?> getEmpJobCounts()
+    {
+        List<EmpNameCountJobs> myEmployees = employeeService.getEmpNameCountJobs();
+        return new ResponseEntity<>(myEmployees,
+            HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/employee/{employeeid}/jobtitle/{jobtitleid}")
+    public ResponseEntity<?> deleteEmployeeJobTitlesByid(
+        @PathVariable
+            long employeeid,
+        @PathVariable
+            long jobtitleid)
+    {
+        employeeService.deleteEmpJobTitle(employeeid,
+        jobtitleid);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/employee/{employeeid}/jobtitle/{jobtitleid}/manager/{manager}")
+    public ResponseEntity<?> addEmployeeJobTitlesByid(
+        @PathVariable
+            long employeeid,
+        @PathVariable
+            long jobtitleid,
+        @PathVariable
+            String manager)
+    {
+        employeeService.addEmpJobTitle(employeeid,
+            jobtitleid, manager);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

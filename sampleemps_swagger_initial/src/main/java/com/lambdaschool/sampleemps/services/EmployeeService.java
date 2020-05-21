@@ -1,6 +1,7 @@
 package com.lambdaschool.sampleemps.services;
 
 import com.lambdaschool.sampleemps.models.Employee;
+import com.lambdaschool.sampleemps.views.EmpNameCountJobs;
 
 import java.util.List;
 
@@ -21,4 +22,15 @@ public interface EmployeeService
         long employeeid);
 
     void delete(long employeeid);
+
+    List<EmpNameCountJobs> getEmpNameCountJobs();
+
+    void deleteEmpJobTitle(
+        long employeeid,
+        long jobtitleid);
+
+    void addEmpJobTitle(
+        long employeeid,
+        long jobtitleid,
+        String manager);
 }
