@@ -17,27 +17,20 @@
  * ApiResponse
     - List of status codes
        - value
-       - Status Code
-       
-Custom Message
-Response (class)
-Parameters
-Description (called value)
-Required or not
-Example (if a base data type or String)
+            - Status Code
+            - Custom Message
+            - Response (class)
+* Parameters
+     - Description (called value)
+     - Required or not
+     - Example (if a base data type or String)
   
-Swagger can do much, much more but let’s stick with the basics for now. Remember the end result is to provide documentation to your clients on how to use your API!
 
-Follow Along
-Let’s add some custom Swagger documentation to an existing application.
 
-Open the application java-sampleswagger-initial from the GitHub repository https://github.com/LambdaSchool/java-sampleswagger.git. This application is similar to the application from https://github.com/LambdaSchool/java-sampleemps.git/sampleemps_data_modeling with the addition of find employee by id endpoints and associated code. I also added the ErrorDetail and ValidationError classes to show how you can customize Swagger when you have full exception handling in place.
-
-Start with the defaults
-First, we need to add the dependencies and configuration for the default Swagger documentation.
+> Add the dependencies and configuration for the default Swagger documentation.
 
 Add the following Swagger Dependencies to the pom.xml file
-
+```java
         <!-- Swagger Dependencies Start -->
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
         <dependency>
@@ -59,10 +52,12 @@ Add the following Swagger Dependencies to the pom.xml file
             <version>2.9.2</version>
         </dependency>
         <!-- Swagger Dependencies End -->
-Yes, I did throw in an additional dependency. The springfox-bean-validator allows Swagger to recognize some of the validation annotations and document their messages as well!
+```
 
-Now we need to add the configuration file for Swagger. This is similar to the configuration file we added before. However, notice the addition of the annotation @Import(BeanValidatorPluginsConfiguration.class). Again, this always Swagger to work with the validation annotations. Feel free to put in your own contact information! Remember in adding all of this code, you will need to make sure the proper imports are done!
+> An additional dependency, the springfox-bean-validator allows Swagger to recognize some of the validation annotations and document their messages as well!
 
+> Add the configuration file for Swagger. Notice the addition of the annotation @Import(BeanValidatorPluginsConfiguration.class) for Swagger to work with the validation annotations. 
+```java
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -105,28 +100,34 @@ public class Swagger2Config
             .version("1.0.0")
             .build();
     }
-Document the Models
-Now let’s add custom Swagger documentation to the Employee Model Let’s describe the model itself. Right before the class header, add the following annotation. Note that value is the name of the model or table and description tells us what is actually being modeled.
+```
 
+## Document the Models
+> Add custom Swagger documentation to the Employee Model to describe the model itself. Right before the class header, add the following annotation. Note that value is the name of the model or table and description tells us what is actually being modeled.
+```java
 @ApiModel(value = "Employee",
     description = "Yes an actual employee record")
 // class header and following code
-For any property in any entity that needs custom documentation, you use the @ApiModelProperty annotation. So, for each field in the Employee model, add the following annotation adjusting the information to fit the property. This annotation goes right before the field declaration. For example, this is the annotation for the primary key. Note that here description is called value and example always takes a String value.
-
+```
+> For any property in any entity that needs custom documentation, use the @ApiModelProperty annotation. So, for each field in the Employee model, add the following annotation adjusting the information to fit the property. This annotation goes right before the field declaration. For example, this is the annotation for the primary key. Note that here description is called value and example always takes a String value.
+```java
     @ApiModelProperty(name = "employee id",
         value = "primary key for employee",
         required = true,
         example = "1")
 // field declaration
-For another example, this is the annotation for the employee name:
+```
 
+> For another example, this is the annotation for the employee name:
+```java
     @ApiModelProperty(name = "employee name",
         value = "full name of employee",
         required = true,
         example = "Best Employee")
 // field declaration
-A Documented Employee Model
-
+```
+> A Documented Employee Model
+```java
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -299,20 +300,22 @@ public class Employee extends Auditable
             manager));
     }
 }
-Document the controllers
-Now let’s add custom Swagger documentation to the EmployeeControl, first adding annotations to the list all employees endpoint. All we need for the list all employees endpoint is the @ApiOperation with a value, description, a response class, and a response container class. So add the following annotation before the listAllEmployees() method
-
+```
+## Document the controllers
+> Add custom Swagger documentation to the EmployeeControl, first adding annotations to the list all employees endpoint. All we need for the list all employees endpoint is the @ApiOperation with a value, description, a response class, and a response container class. So add the following annotation before the listAllEmployees() method
+```java
     @ApiOperation(value = "returns all Employees",
         response = Employee.class,
         responseContainer = "List")
     // method header
-Now let’s look at one slightly more involved - return a single employee based off an employee id. Here we are adding
+ ```
+> Now let’s look at one slightly more involved - return a single employee based off an employee id. Here we are adding
 
-ApiOperation to explain what is happening and any response types.
-@ApiResponses to document how you are responding to exceptions. This only makes sense if you have full exception handling in place in your application. Otherwise I would leave this annotation out and just use the Swagger defaults for ApiResponses.
-@ApiParam is needed before each parameter in the method header! Here we just have one Parameter, the employee id we are seeking. Even if the parameter is coming in through the request body, we still annotation the parameter.
-Add the following annotations to your employee controller for the method getEmployeeById.
-
+> ApiOperation to explain what is happening and any response types.
+> @ApiResponses to document how you are responding to exceptions. This only makes sense if you have full exception handling in place in your application. Otherwise I would leave this annotation out and just use the Swagger defaults for ApiResponses.
+> @ApiParam is needed before each parameter in the method header! Here we just have one Parameter, the employee id we are seeking. Even if the parameter is coming in through the request body, we still annotation the parameter.
+> Add the following annotations to your employee controller for the method getEmployeeById.
+```java
     @ApiOperation(value = "Retrieve an employee based off of employee id",
         response = Employee.class)
     @ApiResponses(value = {@ApiResponse(code = 200,
@@ -326,8 +329,10 @@ Add the following annotations to your employee controller for the method getEmpl
             required = true,
             example = "4")
     // @PathVariable and following
-And let’s do one more. Let’s document the PUT employee endpoint. What is different about this endpoint is that nothing is returned in the response body, so we say the response is Void.class Add the following annotation to your code to document the PUT endpoint.
-
+```
+    
+> Let’s document the PUT employee endpoint. What is different about this endpoint is that nothing is returned in the response body, so we say the response is Void.class Add the following annotation to your code to document the PUT endpoint.
+```java
     @ApiOperation(value = "updates an employee given in the request body",
         response = Void.class)
     @ApiResponses(value = {@ApiResponse(code = 200,
@@ -530,43 +535,32 @@ public class EmployeeController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
-Examine our work
-Run the application and surf to the site http://localhost:2019/swagger-ui.html.
+```
 
-Expand the information for the Employee Controller and notice your custom documentation is now being used!
-Expand the information for the Employee Model and notice that custom documentation is now being used!
-Challenge
-Your task is to add custom Swagger documentation to the JobTitle Model and to the rest of the end points in the EmployeeController
+## Examine our work
+> Run the application and surf to the site http://localhost:2019/swagger-ui.html.
 
-Dig Deeper
-Swagger Homepage
-Swagger Homepage
-Swagger Complete Example
-Swagger and Spring Boot Complete Example
-Learn to gather and use data from other APIs
+> Expand the information for the Employee Controller and notice your custom documentation is now being used!
+> Expand the information for the Employee Model and notice that custom documentation is now being used!
 
-Overview
-See the Github Repository https://github.com/LambdaSchool/java-sampleotherapis.git for the code used in the objective.
-Software Needed
-Java Development Kit (JDK) - at least version 11
-JetBrains IntelliJ IDEA IDE
-Postman
-Often we need to get data from other backend APIs systems. These are either provided by other companies, data scientist people within our own company, or some other group. We become the client. We are reliant on the other system on how to retrieve the data and how the retrieved data is organized. Let’s take a look at a few examples.
+## Get data from other backend APIs systems. 
+> These are either provided by other companies, data scientist people within our own company, or some other group. We become the client. We are reliant on the other system on how to retrieve the data and how the retrieved data is organized. 
 
-We are going to retrieve data from three different APIs that return the data is three common, but very different ways.
+> We are going to retrieve data from three different APIs that return the data, but very different ways.
 
-Straight JSON
-The easiest to work with will be Straight JSON as from the API http://numbersapi.com/random/year?json. This API returns a random math fact based on a random year. Surfing to that site returns
-
+### Straight JSON
+> The easiest to work with will be Straight JSON as from the API http://numbersapi.com/random/year?json. This API returns a random math fact based on a random year. Surfing to that site returns
+```java
 {
     "text": "287 is the year that Emperor Diocletian and Maximian become Roman Consuls.",
     "number": 287,
     "found": true,
     "type": "year"
 }
-Extra Fields wrapped in a class
-Sometimes our data comes back wrapped in a class name and contains fields we do not need. For example, the API http://api.open-notify.org/iss-now.json does this. This API returns the current location of the International Space Station.
-
+```
+### Extra Fields wrapped in a class
+> Sometimes our data comes back wrapped in a class name and contains fields we do not need. For example, the API http://api.open-notify.org/iss-now.json does this. This API returns the current location of the International Space Station.
+```java
 {
     "message": "success",
     "iss_position": {
@@ -575,9 +569,11 @@ Sometimes our data comes back wrapped in a class name and contains fields we do 
     },
     "timestamp": 1590079067
 }
-Wrapped in a class requiring a parameter
-Sometimes to get the data we want we have to send a parameter along with our endpoint. This API will return the Klingon translation of the given English phrase. https://api.funtranslations.com/translate/klingon.json?text=”The enemy of my enemy is the enemy I kill last”
+```
 
+### Wrapped in a class requiring a parameter
+> Sometimes to get the data we want we have to send a parameter along with our endpoint. This API will return the Klingon translation of the given English phrase. https://api.funtranslations.com/translate/klingon.json?text=”The enemy of my enemy is the enemy I kill last”
+```java
 {
     "success": {
         "total": 1
@@ -588,18 +584,17 @@ Sometimes to get the data we want we have to send a parameter along with our end
         "translation": "klingon"
     }
 }
-For all the data we retrieve we need to create a model that can store the data. This data may or not need to be saved to our database. This is usually accomplished through a separate model class for the data along with a collection to store a list of the data. Let’s see how this works in practice! As we are creating POJOs to hold our JSON objects, do note how the names of the fields must match exactly between the two entities.
+```
 
-Follow Along
-Let’s learn about these by following along, coding the following examples. Open the sample-otherapis-initial application from https://github.com/LambdaSchool/java-sampleotherapis.gitt. This application is the same as the sampleemps_data_modeling application from the GitHub Repository https://github.com/LambdaSchool/java-sampleemps.gitt
+> For all the data we retrieve we need to create a model that can store the data. This data may or not need to be saved to our database. This is usually accomplished through a separate model class for the data along with a collection to store a list of the data. We are creating POJOs to hold our JSON objects, do note how the names of the fields must match exactly between the two entities.
 
-Straight JSON
-We want to report a random fact about a year to the console on application start up. Let’s create a model to hold the data we will get back from the API. Under the models subpackage, create a class called YearFact. This will NOT be saved in our database so we will NOT use the @Entity annotation. We need a field to hold each one of the pieces of data we want to save. We also need an annotation to say to ignore all other pieces of data. We will be using @JsonIgnoreProperties(ignoreUnknown = true)
+### Straight JSON
+> We want to report a random fact about a year to the console on application start up. Let’s create a model to hold the data we will get back from the API. Under the models subpackage, create a class called YearFact. This will NOT be saved in our database so we will NOT use the @Entity annotation. We need a field to hold each one of the pieces of data we want to save. We also need an annotation to say to ignore all other pieces of data. We will be using @JsonIgnoreProperties(ignoreUnknown = true)
 
-The API endpoint we are accessing is http://numbersapi.com/random/year?jsonn
-Looking at the JSON that is returned by this endpoint we only want the data text and number. See JSON object from above.
+> The API endpoint we are accessing is http://numbersapi.com/random/year?jsonn
+> Looking at the JSON that is returned by this endpoint we only want the data text and number. See JSON object from above.
 So enter the following code for the class YearFact. Remember in adding all of this code, you will need to make sure the proper imports are done! Do note how closely this matches the layout of the JSON object!
-
+```java
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // needed to ignore any fields coming across that we do not want in our final class.
@@ -638,8 +633,10 @@ public class YearFact
                 '}';
     }
 }
-We now need to go get the data and then display it in the console. Add the following code to the main method in the SampleempsApplication class. In this code we introduce
+```
 
+> We now need to go get the data and then display it in the console. Add the following code to the main method in the SampleempsApplication class. In this code we introduce
+```java
 The RestTemplate - creates the object that is needed to do a client side Rest API call.
 MappingJackson2HttpMessageConverter - a way to configure our rest request.
 Doing a request now instead of responding to one.
@@ -672,8 +669,10 @@ Doing a request now instead of responding to one.
         // now that we have our data, let's print it to the console!
         YearFact ourYearFact = responseEntity.getBody();
         System.out.println(ourYearFact);
-So we end up with the following SampleempsApplication class.
+```
 
+> So we end up with the following SampleempsApplication class.
+```java
 import com.lambdaschool.sampleemps.models.YearFact;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -728,8 +727,10 @@ public class SampleempsApplication
             args);
     }
 }
-Run the application and notice something similar in the console!
+```
 
+> Run the application and notice something similar in the console!
+```java
 14:38:16.213 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP GET http://numbersapi.com/random/year?json
 14:38:16.242 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[application/json, application/*+json, */*]
 14:38:23.788 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
@@ -740,14 +741,17 @@ YearFact{text='1889 is the year that International Workers Congresses of Paris.'
 14:38:23.981 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
 14:38:23.982 [restartedMain] DEBUG org.springframework.web.client.RestTemplate - Reading to [com.lambdaschool.sampleemps.models.YearFact]
 YearFact{text='1366 is the year that Muhammed V builds the Granada Hospital in Granada (in present-day Spain).', number=1366}
-Extra Fields wrapped in a class
-We want an endpoint that will return the current position of the international space station.
+```
 
-Create a model to hold the ISS Position data. We only want the fields latitude and longitude which are part of the iss_position class embedded in the JSON Object. Let’s create a model to hold the data that is retrieved from the API. This model will include a field that is of some class type. Create a model called IssPositionReturnData in the subpackage models. Add the following code.
+### Extra Fields wrapped in a class
+> We want an endpoint that will return the current position of the international space station.
 
-Do note how closely this matches the layout of the JSON object!
-Do note that we do not need the @JsonIgnoreProperties(ignoreUnknown = true) as we are handling all incoming pieces of data. We not returning all that data to the client but we have a place in our application to store all data retrieved from the API.
-Note that the field of the embedded class type has to match the field name from the JSON Object, just like all the other fields. Nothing special about it being a class!
+> Create a model to hold the ISS Position data. We only want the fields latitude and longitude which are part of the iss_position class embedded in the JSON Object. Let’s create a model to hold the data that is retrieved from the API. This model will include a field that is of some class type. Create a model called IssPositionReturnData in the subpackage models. Add the following code.
+
+> Do note how closely this matches the layout of the JSON object!
+> Do note that we do not need the @JsonIgnoreProperties(ignoreUnknown = true) as we are handling all incoming pieces of data. We not returning all that data to the client but we have a place in our application to store all data retrieved from the API.
+> Note that the field of the embedded class type has to match the field name from the JSON Object, just like all the other fields. Nothing special about it being a class!
+```java
 public class IssPositionReturnData
 {
     private String message;
@@ -784,8 +788,10 @@ public class IssPositionReturnData
         this.timestamp = timestamp;
     }
 }
-We now need to create that embedded class type. Create a model called IssPosition in the subpackage models. Add the following code.
+```
 
+> We now need to create that embedded class type. Create a model called IssPosition in the subpackage models. Add the following code.
+```java
 public class IssPosition
 {
     private String latitude;
@@ -811,8 +817,9 @@ public class IssPosition
         this.longitude = longitude;
     }
 }
-Now let’s go retrieve the data. Create a new class under the subpackage controllers called OtherApis. Add the following code.
-
+```
+> Now let’s go retrieve the data. Create a new class under the subpackage controllers called OtherApis. Add the following code.
+```java
 import com.lambdaschool.sampleemps.models.IssPosition;
 import com.lambdaschool.sampleemps.models.IssPositionReturnData;
 import org.springframework.core.ParameterizedTypeReference;
@@ -872,15 +879,18 @@ public class OtherApis
                 HttpStatus.OK);
     }
 }
-Run the application and surf to the endpoint http://localhost:2019/otherapis/isspositionss. You get back data similar to the following
-
+```
+> Run the application and surf to the endpoint http://localhost:2019/otherapis/isspositionss. You get back data similar to the following
+```java
 {
     "latitude": "38.1104",
     "longitude": "-49.8389"
 }
-Wrapped in a class requiring a parameter
-We want an endpoint that will return the Klingon translation of a phrase coming in through a path variable. We need to create a class that contains a field that is of type contents class. So, we also need to create the contents class. In the models subpackage, create a class called Translation. Add to that the class the following code. Note that the field of the embedded class type has to match the field name from the JSON Object, just like all the other fields. Nothing special about it being a class!
+```
 
+### Wrapped in a class requiring a parameter
+> We want an endpoint that will return the Klingon translation of a phrase coming in through a path variable. We need to create a class that contains a field that is of type contents class. So, we also need to create the contents class. In the models subpackage, create a class called Translation. Add to that the class the following code. Note that the field of the embedded class type has to match the field name from the JSON Object, just like all the other fields. Nothing special about it being a class!
+```java
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -898,8 +908,9 @@ public class Translation
         this.contents = contents;
     }
 }
-Now we need to create the embedded class type contents. In the models subpackage, create a class called TranslationContents and add the following code.
-
+```
+> Now we need to create the embedded class type contents. In the models subpackage, create a class called TranslationContents and add the following code.
+```java
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -917,8 +928,9 @@ public class TranslationContents
         this.translated = translated;
     }
 }
-We will now create the endpoint to access this information. Handling of the path variable is just like we handle all other path variables. Add the following code to the bottom of the controller class OtherApis.
-
+```
+> We will now create the endpoint to access this information. Handling of the path variable is just like we handle all other path variables. Add the following code to the bottom of the controller class OtherApis.
+```java
     @GetMapping(value = "/klingon/{englishText}")
     public ResponseEntity<?> getTranslation(
             @PathVariable
@@ -955,46 +967,17 @@ We will now create the endpoint to access this information. Handling of the path
         return new ResponseEntity<>(ourTranslation,
                 HttpStatus.OK);
     }
-Surf to the endpoint http://localhost:2019/otherapis/klingon/”Success”” and we get something similar to the following
-
+```
+> Surf to the endpoint http://localhost:2019/otherapis/klingon/”Success”” and we get something similar to the following
+```java
 {
     "translated": "\"qapla'\""
 }
-Now surf to this endpoint http://localhost:2019/otherapis/klingon/”I want to be a backend developer” and we get something similar to the following
-
+```
+> Now surf to this endpoint http://localhost:2019/otherapis/klingon/”I want to be a backend developer” and we get something similar to the following
+```java
 {
     "translated": "\"jih neh to qu' a backend developer\""
 }
-So go forth and gather data from other APIs!
-
-Dig Deeper
-JSON to POJO
-Convert from JSON to POJO
-Guided Project
-java-exceptionalusermodel
-We are adding client friendly exception handling.
-
-GitHub Repo
-Project
-java-schools
-Let’s put our new exception(al) skills to work!
-
-Review
-Class Recordings
-You can use class recordings to help you master the material.
-
-All previous recordings
-Demonstrate Mastery
-To demonstrate mastery of this module, you need to complete and pass a code review on each of the following:
-
-Objective challenge:
-Following the same process you used to create a ResourceNotFoundException, create a ResourceFoundException to be used in place of the built-in exception EntityExistsException.
-
-Objective challenge:
-Add an annotation to validate the email field in the Email model. Note that since the word email is already in use in the method, IntelliJ adds the full address of the annotation to give you something like @javax.validation.constraints.Email. It happens when these common words are used. We have to know which one to use at what time!
-
-Objective challenge:
-Your task is to add custom Swagger documentation to the JobTitle Model and to the rest of the end points in the EmployeeController
-
-Guided Project: java-exceptionalusermodel
-Project: java-schools
+```
+> So go forth and gather data from other APIs!
