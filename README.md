@@ -1,3 +1,4 @@
+# Java Swagger
 >Put custom Swagger documentation on the following items:
 
 * **Models**
@@ -92,11 +93,11 @@ public class Swagger2Config
     {
         return new ApiInfoBuilder().title("Custom Swagger Documentation Example")
             .description("Custom Swagger Documentation Example")
-            .contact(new Contact("John Mitchell",
-                "http://www.lambdaschool.com",
-                "john@lambdaschool.com"))
+            .contact(new Contact("Tony",
+                "http://www.cocoisland.com",
+                "tony@cocoisland.com"))
             .license("MIT")
-            .licenseUrl("https://github.com/LambdaSchool/java-sampleswagger/blob/master/LICENSE")
+            .licenseUrl("https://github.com/cocoisland/java-sampleswagger/blob/master/LICENSE")
             .version("1.0.0")
             .build();
     }
