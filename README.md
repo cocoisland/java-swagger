@@ -975,7 +975,7 @@ public class TranslationContents
     "translated": "\"qapla'\""
 }
 ```
-> Now surf to this endpoint http://localhost:2019/otherapis/klingon/”I want to be a backend developer” and we get something similar to the following
+> Now surf to this endpoint http://localhost:2019/otherapis/klingon/”I want to be a backend developer”" and we get something similar to the following
 ```java
 {
     "translated": "\"jih neh to qu' a backend developer\""
