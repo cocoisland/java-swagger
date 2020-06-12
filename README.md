@@ -14,9 +14,9 @@
   </dl>
 * Operation’s Level
 - Description (called value)
--- Response type (Class type)
+- Response type (Class type)
 
-Response container type (optional, usually a List)
+* Response container type (optional, usually a List)
 ApiResponse
 List of status codes
 value
