@@ -1,28 +1,24 @@
 >Put custom Swagger documentation on the following items:
 
 **Models**
-<dl>
-  <dt>At the table level including</dt>
-  <dd>Name</dd>
-  <dd>Description</dd>
-  <dt>At the column, field, or property level including</dt>
-  <dd>Name</dd>
-  <dd>Description (called value)</dd>
-  <dd>Required or not</dd>
-  <dd>Giving an example</dd>
-  <dt>Controller</dt>
-  </dl>
-  
-  
+* At the table level including
+    - Name
+    - Description<
+ * At the column, field, or property level including
+    - Name
+    - Description (called value)
+    - Required or not
+    - Giving an example
+**Controller**
 * Operation’s Level
     - Description (called value)
     - Response type (Class type)
-* Response container type (optional, usually a List)
-    - ApiResponse
-
-List of status codes
-value
-Status Code
+    - Response container type (optional, usually a List)
+ * ApiResponse
+    - List of status codes
+       - value
+       - Status Code
+       
 Custom Message
 Response (class)
 Parameters
