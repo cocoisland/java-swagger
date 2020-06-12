@@ -11,9 +11,11 @@
   <dd>Required or not</dd>
   <dd>Giving an example</dd>
   <dt>Controller</dt>
-Operation’s Level
-Description (called value)
-Response type (Class type)
+  </dl>
+* Operation’s Level
+..* Description (called value)
+..*..* Response type (Class type)
+
 Response container type (optional, usually a List)
 ApiResponse
 List of status codes
@@ -25,7 +27,7 @@ Parameters
 Description (called value)
 Required or not
 Example (if a base data type or String)
-  </dl>
+  
 Swagger can do much, much more but let’s stick with the basics for now. Remember the end result is to provide documentation to your clients on how to use your API!
 
 Follow Along
