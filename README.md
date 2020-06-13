@@ -5,7 +5,7 @@
     - Base Directory -> directory where pom.xml reside
     - Goals -> spring-boot:run
    
-   
+## Fitting Swagger template into java application.
 >Put custom Swagger documentation on the following items:
 
 * **Models**
