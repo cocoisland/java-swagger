@@ -1,9 +1,9 @@
 # Java Swagger
 
 ## Running on Eclipse
-Run Configuration -> Maven Build-> New Configuration
-   Base Directory -> directory where pom.xml reside
-   Goals -> spring-boot:run
+* Run Configuration -> Maven Build-> New Configuration
+    - Base Directory -> directory where pom.xml reside
+    - Goals -> spring-boot:run
    
    
 >Put custom Swagger documentation on the following items:
